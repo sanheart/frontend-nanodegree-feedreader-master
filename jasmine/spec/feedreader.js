@@ -32,10 +32,17 @@ $(function() {
          * and that the URL is not empty.
          */
          it('urls are defined and that the URL is not empty', function() {
-            for(var i = 0; i < allFeeds.length; i++){
-                expect(allFeeds[i].url).toBeDefined();
-                expect(allFeeds[i].url).not.null();
-            }
+            // for(var i = 0; i < allFeeds.length; i++){
+            //     expect(allFeeds[i].url).toBeDefined();
+            //     //检查空字符串，即判断长度是否为0
+            //     expect(allFeeds[i].url.length).not.toBe(0);
+            // }
+
+            //使用forEach遍历allFeeds
+            allFeeds.forEach(function(feed) {
+                expect(feed.url).toBeDefined();
+                expect(feed.url.length).toBe(0);
+            });
          });
 
 
@@ -44,10 +51,10 @@ $(function() {
          * and that the name is not empty.
          */
          it('names are defined and that the name is not empty', function() {
-            for(var i = 0; i < allFeeds.length; i++){
-                expect(allFeeds[i].name).toBeDefined();
-                expect(allFeeds[i].name).not.null();
-            }
+            allFeeds.forEach(function(feed) {
+                expect(feed.name).toBeDefined();
+                expect(feed.name.length).toBe(0);
+            });
          });
 
     });
@@ -64,7 +71,8 @@ $(function() {
 
          it("the menu element is hidden by default", function() {
             //检查body 的 class  menu-hidden 存在即可
-            expect($("body").hasClass('menu-hidden')).toBeTruthy();
+            //hasClass()的返回值就是布尔值，不需要转换
+            expect($("body").hasClass('menu-hidden')).toBe(true);
 
          });
 
@@ -76,10 +84,10 @@ $(function() {
           it("the menu changes visibility when the menu icon is clicked", function() {
             //trigger() 方法触发被选元素的指定事件类型
             $(".menu-icon-link").trigger('click');
-            expect($("body").hasClass("menu-hidden")).toBeFalsy();
+            expect($("body").hasClass("menu-hidden")).toBe(false);
             //再点击    
             $(".menu-icon-link").trigger('click');
-            expect($(body).hasClass('menu-hidden')).toBeTruthy();
+            expect($(body).hasClass('menu-hidden')).toBe(true);
 
           });
     });
@@ -130,7 +138,7 @@ $(function() {
             jasmine.DEFAULT_TIMEOUT_INTERVAL = 6000;
 
             loadFeed(0 , function() {
-                oldFeed = ('.feed').html()；
+                oldFeed = $('.feed').html()；
                 loadFeed(1, function() {
                     done();
                 });
