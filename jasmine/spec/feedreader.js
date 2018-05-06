@@ -41,7 +41,7 @@ $(function() {
             //使用forEach遍历allFeeds
             allFeeds.forEach(function(feed) {
                 expect(feed.url).toBeDefined();
-                expect(feed.url.length).toBe(0);
+                expect(feed.url.length).not.toBe(0);
             });
          });
 
@@ -53,7 +53,7 @@ $(function() {
          it('names are defined and that the name is not empty', function() {
             allFeeds.forEach(function(feed) {
                 expect(feed.name).toBeDefined();
-                expect(feed.name.length).toBe(0);
+                expect(feed.name.length).not.toBe(0);
             });
          });
 
@@ -72,7 +72,7 @@ $(function() {
          it("the menu element is hidden by default", function() {
             //检查body 的 class  menu-hidden 存在即可
             //hasClass()的返回值就是布尔值，不需要转换
-            expect($("body").hasClass('menu-hidden')).toBe(true);
+            expect($("body").hasClass("menu-hidden")).toBe(true);
 
          });
 
@@ -83,11 +83,11 @@ $(function() {
           */
           it("the menu changes visibility when the menu icon is clicked", function() {
             //trigger() 方法触发被选元素的指定事件类型
-            $(".menu-icon-link").trigger('click');
+            $(".menu-icon-link").trigger("click");
             expect($("body").hasClass("menu-hidden")).toBe(false);
             //再点击    
-            $(".menu-icon-link").trigger('click');
-            expect($(body).hasClass('menu-hidden')).toBe(true);
+            $(".menu-icon-link").trigger("click");
+            expect($("body").hasClass("menu-hidden")).toBe(true);
 
           });
     });
@@ -112,7 +112,7 @@ $(function() {
             loadFeed(0, done);
          });
 
-         it("when the loadFeed function is called and completes its work", function(done) {
+         it("when the loadFeed function is called and completes its work", function() {
             expect($('.feed').children().length).toBeGreaterThan(0);
          });
 
@@ -133,19 +133,25 @@ $(function() {
         */
         var originalTimeout,
             oldFeed;
+        /*
+        如果这个匿名函数的参数里有 done，
+        Jasemine 会认为这个匿名函数里调用了异步函数，它会等待异步函数执行完毕，
+        再进行下一步。在异步函数里调用 done()，就是通知 Jasmine，异步函数已经执行完毕。
+        所以如果这里你在参数里加了 done，但是并不在匿名函数中调用它，Jasemine 会一直等待
+        直到超出它的异步函数超时等待时间（默认是 5 秒）。会出现下面的问题：*/
         beforeEach(function(done) {
             originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
             jasmine.DEFAULT_TIMEOUT_INTERVAL = 6000;
 
             loadFeed(0 , function() {
-                oldFeed = $('.feed').html()；
+                oldFeed = $('.feed').html();
                 loadFeed(1, function() {
                     done();
                 });
             });
         });
-
-        it("a new feed is loaded", function(done) {
+        //其实这个 it 函数中并没有异步函数，所以可以直接省略 done：
+        it("a new feed is loaded", function() {
             expect($('.feed').html()).not.toEqual(oldFeed);
         });
 
